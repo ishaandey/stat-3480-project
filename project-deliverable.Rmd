@@ -63,27 +63,27 @@ library(dplyr)
 covid_data <- readr::read_csv("covid-data.csv") %>% as_tibble()
 covid_data$Mask.Mandate <- dplyr::if_else(covid_data$Mask.Mandate.Start.Date == 'None', 
                                           true=0, false=1) %>% as.factor()
-covid_data %>% head()
+covid_data %>% select(c(State, Mask.Mandate, Cases.Per.1000, Death.Rate.Pct)) %>% head()
 ```
-### Big Q1
+### Mask Mandate
 ```{r q1-setup}
-mask.sample1 <- covid_data %>% 
+mask.mandate <- covid_data %>% 
   filter(Mask.Mandate == 1) %>% pull(Cases.Per.1000)
-mask.sample2 <- covid_data %>% 
+no.mask.mandate <- covid_data %>% 
   filter(Mask.Mandate == 0) %>% pull(Cases.Per.1000)
 ```
 
 ```{r q1-test, results=T}
-wilcox.test(mask.sample1, mask.sample2, alternative="less")
+wilcox.test(mask.mandate, no.mask.mandate, alternative="less")
 ```
 
-### Big Q2
+### Cases and Fatality
 ```{r}
 case.rate <- covid_data$Cases.Per.1000  
 death.rate <- covid_data$Death.Rate.Pct  
 ```
 
-```{r q2-test-spearman}
+```{r q2-test-1}
 r.obs<-cor(rank(case.rate), rank(death.rate))
 
 source("http://www4.stat.ncsu.edu/~lu/ST505/Rcode/functions-Ch5.R")
@@ -97,7 +97,7 @@ paste("Spearman's Correlation:", round(r.obs,4)) %>% print()
 paste("p-value:", round(p.upper,3)) %>% print()
 ```
 
-```{r}
+```{r q2-test-2}
 tau.obs<-getTau(case.rate,death.rate)
 
 perm.tau<-perm.approx.tau(case.rate,death.rate,2000)
@@ -126,8 +126,8 @@ hist(mask.sample2, xlab='Case Rate Per 1000', main='Mask Not Mandated',
 
 *Figure 2*. Scatterplot of Death Rate (%) against Case Rates (per 1000) 
 
-```{r}
-plot(case.rate, death.rate, main='Death Rate (%) vs. Case Rates (per 1000)',
+```{r q2-eda, echo=F}
+plot(case.rate, death.rate, main='',
      xlab='Case Rates (per 1000)', ylab = 'Death Rate (%)')
 ```
 
