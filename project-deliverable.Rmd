@@ -1,0 +1,133 @@
+---
+subtitle: "STAT 3480 Consulting Project"
+title: "Coronavirus in the Southeast"
+author: "Ishaan Dey & Tal Dunne"
+date: "11/23/2020"
+output: pdf_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning=F, message=F)
+```
+*****
+# Executive Summary
+
+
+\newpage
+# Introduction
+## Project Description
+- Restate the client’s research problem (for clarification)
+- Put the data and the research question in context.
+- Why is the client’s research relevant?
+- Has this research question been studied previously?
+
+## Data Summary & Discussion
+- How was the data collected?
+– What is the sampling/ experimental design?
+– What are some potential biases?
+- What variables are measured? What are the units?
+- How large is the dataset?
+- Some basic summary statistics and graphs of the data should be presented. (These basic distributions will be relevant for the methodology.)
+
+\newpage
+# Methodology
+- What variables are measured? What are the units?
+- How large is the dataset?
+- Some basic summary statistics and graphs of the data should be presented. (These basic distributions will be relevant for the methodology.)
+
+# Results
+- Test statistics
+- P-values
+- Confidence intervals
+- Inference decisions (conclusions
+
+# Discussion
+- Interpret and discuss the significance of the analysis results.
+- Substantiate any conclusions with results.
+- Tell the story of how you answered your client’s research question(s).
+- Discuss the limitations of the study (which can pertain to data, data collection, or methodology).
+- Make sure to be delicate – the client doesn’t want to hear what a bad job they’ve done.
+
+# Conclusion
+- The goal of this section is to address the client’s bottom line: what does your progress mean for his/her research problem?
+
+\newpage
+# Appendix
+## Code
+
+```{r library, warning=F, results='hide'}
+library(readr)
+library(dplyr)
+```
+
+```{r import, warning=F}
+covid_data <- readr::read_csv("covid-data.csv") %>% as_tibble()
+covid_data$Mask.Mandate <- dplyr::if_else(covid_data$Mask.Mandate.Start.Date == 'None', 
+                                          true=0, false=1) %>% as.factor()
+covid_data %>% head()
+```
+### Big Q1
+```{r q1-setup}
+mask.sample1 <- covid_data %>% 
+  filter(Mask.Mandate == 1) %>% pull(Cases.Per.1000)
+mask.sample2 <- covid_data %>% 
+  filter(Mask.Mandate == 0) %>% pull(Cases.Per.1000)
+```
+
+```{r q1-test, results=T}
+wilcox.test(mask.sample1, mask.sample2, alternative="less")
+```
+
+### Big Q2
+```{r}
+case.rate <- covid_data$Cases.Per.1000  
+death.rate <- covid_data$Death.Rate.Pct  
+```
+
+```{r q2-test-spearman}
+r.obs<-cor(rank(case.rate), rank(death.rate))
+
+source("http://www4.stat.ncsu.edu/~lu/ST505/Rcode/functions-Ch5.R")
+perm.r<-perm.approx.r(rank(case.rate),rank(death.rate),2000)
+
+p.upper<-mean(perm.r >= r.obs)
+p.lower<-mean(perm.r <= r.obs)
+p.two.sided<-mean(abs(perm.r) >= abs(r.obs))
+
+paste("Spearman's Correlation:", round(r.obs,4)) %>% print()
+paste("p-value:", round(p.upper,3)) %>% print()
+```
+
+```{r}
+tau.obs<-getTau(case.rate,death.rate)
+
+perm.tau<-perm.approx.tau(case.rate,death.rate,2000)
+
+p.upper.tau<-mean(perm.tau >= tau.obs)
+p.lower.tau<-mean(perm.tau <= tau.obs)
+p.two.sided.tau<-mean(abs(perm.tau) >= abs(tau.obs))
+
+paste("Kendall's Tau:", round(tau.obs,4)) %>% print()
+paste("p-value:", round(p.upper.tau,3)) %>% print()
+```
+
+
+## Figures
+*Figure 1*. Distribution of Case Rates (per 1000), by State Mask Mandates.
+
+```{r q1-eda, echo=F}
+par(mfrow=c(2,1))
+breaks <- seq(10, 40, 2)
+hist(mask.sample1, xlab='', main='Mask Mandated', 
+     ylab='No. of States', breaks = breaks)
+hist(mask.sample2, xlab='Case Rate Per 1000', main='Mask Not Mandated',
+     ylab='No. of States',breaks = breaks)
+```
+
+
+*Figure 2*. Scatterplot of Death Rate (%) against Case Rates (per 1000) 
+
+```{r}
+plot(case.rate, death.rate, main='Death Rate (%) vs. Case Rates (per 1000)',
+     xlab='Case Rates (per 1000)', ylab = 'Death Rate (%)')
+```
+
