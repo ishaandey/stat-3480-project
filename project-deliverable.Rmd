@@ -72,7 +72,7 @@ In performing the *Wilcoxon Rank Sum Test*, we obtain the following results:
 |:---|:---|
 |$W=14$|$0.183$|
 
-Given that our p-value of $0.183$ is less than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true difference between our samples is $0$.
+Given that our p-value of $0.183$ is greater than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true difference between our samples is $0$.
 
 ## Fatality
 
@@ -84,7 +84,7 @@ In performing the *Spearman's Correlation Permutation Test*, we obtain the follo
 |:---|:---|
 |$\rho=0.302$|$0.158$|
 
-Given that our p-value of $0.158$ is less than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true correlation between the features is $0$.
+Given that our p-value of $0.158$ is greater than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true correlation between the features is $0$.
 
 -----
 
