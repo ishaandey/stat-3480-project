@@ -2,22 +2,25 @@
 subtitle: "STAT 3480 Consulting Project"
 title: "Coronavirus in the Southeast"
 author: "Ishaan Dey & Tal Dunne"
-date: "11/23/2020"
-output: pdf_document
+date: "December 1st, 2020"
+output:
+  pdf_document:
+    df_print: kable
 
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = T, warning=F, message=F, fig.width=6, fig.height = 4)
+knitr::opts_chunk$set(echo=T, warning=F, message=F, fig.width=6, fig.height=4)
 ```
 *****
 # Executive Summary
 
+The COVID-19 pandemic has caused significant disruptions to the US, particularly in southeast states. Here, we aim to examine the association between case rates and fatality rates, in addition to the potential impact mask mandates may have on stemming cases. We find that there is no statistically significant evidence to suggest that mask mandates lead to lower case rates, and no evidence to suggest a positive correlation between case rates and death rates. We recommend investigating trends at a per-county level to increase sample size and retain homogeneity between samples.  
 
 \newpage
 # Introduction
 ## Project Description
 
-The coronavirus pandemic has taken the United States by storm - it is important that we understand as much as possible about the disease and its effects. As such, it is crucial that we run data analytics and obtain predictions and inferences about existing information. Given the airborne transmission of COVID, it makes sense to operate on a regional level. The focus of this report is on the Southeastern United States, defined as Alabama, Arkansas, Florida, Georgia, Kentucky, Louisiana, Mississippi, Missouri, North Carolina, South Carolina, Tennessee, Virginia, and West Virginia. These thirteen states have implemented a variety of measures, including mask mandates or lack thereof. The intent of this report is to analyze the response to COVID in these areas. The main research focuses on the effects of the mask mandate on total cases per 1,000 people and the connection between a lower number of cases per 1,000 people and the death rate. 
+The COVID-19 pandemic has taken the United States by storm - it is important that we understand as much as possible about the disease and its effects. As such, it is crucial that we run data analytics and obtain predictions and inferences about existing information. Given the airborne transmission of COVID, it makes sense to operate on a regional level. The focus of this report is on the Southeastern United States, defined as Alabama, Arkansas, Florida, Georgia, Kentucky, Louisiana, Mississippi, Missouri, North Carolina, South Carolina, Tennessee, Virginia, and West Virginia. These thirteen states have implemented a variety of measures, including mask mandates or lack thereof. The intent of this report is to analyze the response to COVID in these areas. The main research focuses on the effects of the mask mandate on total cases per 1,000 people and the connection between a lower number of cases per 1,000 people and the death rate. 
 
 The CDC has already looked into the effect of the mask mandate in Kansas, where the government implemented the legislation with a county opt-out option. Of the 24 counties that implemented a mask mandate, all of them showed a decrease in COVID incidence. In contrast, the COVID incidence in the 81 counties without the mandate showed a continuing increase. As such, the researchers at the CDC came to the conclusion that wearing face masks in public helps to reduce the spread of the virus. Another study that has been conducted on the topic used the mask mandates in 15 states plus Washington D.C. to come to the conclusion that the states with mandates had a greater decline in daily COVID growth rates compared to the states that did not issue mandates. 
 
@@ -40,7 +43,7 @@ The client has hypothesized that the states with masks mandates see a lower numb
 
 With regards to the procedure of interest, the analysis will proceed using the Wilcoxon Rank-Sum Test. This test procedure allows us to compare two distributions in order to determine if there is a significant difference between them. In contrast to a number of other inference procedures, the Wilcoxon test is applied to the ranks of the observations, rather than the data itself. Ranks are a fairly straightforward concept - the smallest value is assigned a rank of 1, the second smallest is assigned a rank of 2, and so on. In using ranks instead of the actual data, the test accounts for distributions that may not follow the traditional bell-shaped curve. 
 
-The Wilcoxon Rank-Sum test is the best method to use in this instance for a number of reasons. First and foremost, the only requirement to use the test is that both distributions are continuous. This assumption is satisfied because the number of cases per 1,000 people is a continuous variable - it can be any number greater than zero, including decimals. There are no assumptions about the shape of the distribution for the Wilcoxon test, which is perfect for this instance given such small sample sizes. We can observe the shape of the two distributions in [figure 3](#b.-figures). The distribution for the mask mandate states especially is very skewed and heavy-tailed, which means it differs greatly from the standard bell-shaped curve. Given the analysis of interest, the continuous distributions, and the relative skewness of those distributions, the Wilcoxon Rank-Sum Test is the best methodology for our procedure.
+The Wilcoxon Rank-Sum test is the best method to use in this instance for a number of reasons. First and foremost, the only requirement to use the test is that both distributions are continuous. This assumption is satisfied because the number of cases per 1,000 people is a continuous variable - it can be any number greater than zero, including decimals. There are no assumptions about the shape of the distribution for the Wilcoxon test, which is perfect for this instance given such small sample sizes. We can observe the shape of the two distributions in [Figure 3](#b.-figures). The distribution for the mask mandate states especially is very skewed and heavy-tailed, which means it differs greatly from the standard bell-shaped curve. Given the analysis of interest, the continuous distributions, and the relative skewness of those distributions, the Wilcoxon Rank-Sum Test is the best methodology for our procedure.
 
 The procedure itself revolves around the aforementioned ranks of observations. The hypothesis that the mask mandate decreases the number of cases indicates that we expect the observations of states with mask mandates to have lower ranks. As such, we expect to see that the population of states with mask mandates has smaller ranks than the population of states without mask mandates. From this starting point, we can proceed and calculate the test statistic. The test statistic, in this case, is just the sum of all ranks for the population of states with mask mandates. After assigning ranks from smallest to largest, we look at the 7 states which implemented a mask mandate and add up their respective ranks. This number, called the test statistic, is important for determining if the result of the test is significant or not.
 
@@ -82,6 +85,8 @@ In performing the *Spearman's Correlation Permutation Test*, we obtain the follo
 |$\rho=0.302$|$0.158$|
 
 Given that our p-value of $0.158$ is less than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true correlation between the features is $0$.
+
+-----
 
 See [Appendix A: Code](#a.-code) for relevant code on all reported values.
 
