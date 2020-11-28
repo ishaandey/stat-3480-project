@@ -9,7 +9,7 @@ output:
 
 ---
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=T, warning=F, message=F, fig.width=6, fig.height=4)
+knitr::opts_chunk$set(echo=T, warning=F, message=F, fig.width=6, fig.height=4, cache=F)
 ```
 *****
 # Executive Summary
@@ -82,9 +82,9 @@ In performing the *Spearman's Correlation Permutation Test*, we obtain the follo
 
 |Test-Statistic|p-value|
 |:---|:---|
-|$\rho=0.302$|$0.158$|
+|$\rho=0.302$|$0.148$|
 
-Given that our p-value of $0.158$ is greater than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true correlation between the features is $0$.
+Given that our p-value of $0.148$ is greater than $\alpha$ of $0.05$, we *fail to reject* $H_0$ that the true correlation between the features is $0$.
 
 -----
 
@@ -103,7 +103,7 @@ In summation, we cannot make the claim that a mask mandate reduces the number of
 
 ## Fatality
 
-The data was aggregated and run through the Spearman’s Rank Correlation procedure. The results of the test give a p-value of 0.154, or 15.4%. This indicates that we have a 15.4% chance of observing a result as extreme or more extreme than our original data set - again, not low enough to claim statistical significance. As such, it is important to understand why the hypothesis could not be verified. 
+The data was aggregated and run through the Spearman’s Rank Correlation procedure. The results of the test give a p-value of 0.148, or 14.8%. This indicates that we have a 14.8% chance of observing a result as extreme or more extreme than our original data set - again, not low enough to claim statistical significance. As such, it is important to understand why the hypothesis could not be verified. 
 
 As with the mask mandate test, the sample size is simply too small to make any accurate conclusions. Moving to the county level in these states would provide a better understanding of how the death rate relates to the number of cases per 1,000 people. One other thing that we do not consider is population demographics. For example, it is known that there is a large elderly population in Florida. If the high-risk categories were to be trusted, we would expect to see a higher number of deaths in this area. Disregarding both the county level information and the demographic information reduces the capacity of this test to make accurate conclusions. Additionally, one of the limitations of the Spearman’s Rank Correlation is that it only accounts for a monotonic trend. That is, it only can find a trend in one direction, either positively or negatively. While that may or may not have impacted the results of this test, it is something to note as the true relationship between these variables may be parabolic in nature. 
 
@@ -126,6 +126,9 @@ Load in data processing and statistical libraries
 library(readr)
 library(dplyr)
 source("http://www4.stat.ncsu.edu/~lu/ST505/Rcode/functions-Ch5.R")
+
+RNGkind(sample.kind = "Rejection")
+set.seed(1234)
 ```
 
 Load in raw data
